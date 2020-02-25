@@ -177,7 +177,6 @@ class NTLMSoapClient extends SoapClient
     }
 }
 
-
 // we unregister the current HTTP wrapper
 stream_wrapper_unregister('http');
 // we register the new HTTP wrapper
@@ -204,16 +203,74 @@ $soap = $client = new NTLMSoapClient($baseURL);
 // echo '</pre>';
 
 echo '<pre>';
-var_dump($client->__getFunctions());
+// Get all functions
+//var_dump($client->__getFunctions());
+//$response = $client->__soapCall('HelloWorld');
+// echo '<pre>';
+// print_r($response);
+// exit;
 
-$item = array('item');
 
+$ourParamsArray = array('items' => array('item' => ''), 'no' => '');
+$response = $client->__soapCall('GetItems', array('parameters' => $ourParamsArray));
+echo '<pre>';
+print_r($ourParamsArray);
+exit;
+
+// Create customer
+$header = array("orderNo"=> "4465464",
+                "buyFromCustomerNo"=> "4465464",
+                "orderDate"=> "02022019",
+                "currency"=> "DKK");
+
+$purchOrderLine = array("itemNo"=> "1234",
+                "itemName"=> "Test item",
+                "quantity"=> "1",
+                "total"=> "100");
+
+$purchOrderLineList = array("purchOrderLine" => array($purchOrderLine));
+$purchOrder = array("header" => $header, "purchOrderLineList" => $purchOrderLineList);
+$ourParamsArray = array('purchOrder' => $purchOrder);
+
+$response = $client->__soapCall('CreatePurchOrder', array('parameters' => $ourParamsArray));
+echo '<pre>';
+print_r($response);
+exit;
+
+// Get Receipt
+$ourParamsArray = array('orderNo' => '60802000081', 'result' => '');
+$response = $client->__soapCall('GetReceipts', array('parameters' => $ourParamsArray));
+
+// Get GetPurchOrderStatus
+$ourParamsArray = array('purchOrderNo' => '60802000081', 'result' => '');
+$response = $client->__soapCall('GetPurchOrderStatus', array('parameters' => $ourParamsArray));
+
+// Get shipments
+$ourParamsArray = array('orderNo' => '60802000081', 'result' => '');
+$response = $client->__soapCall('GetShipments', array('parameters' => $ourParamsArray));
+
+// Get all items
 $ourParamsArray = array('items' => '', 'no' => '');
 $response = $client->__soapCall('GetItems', array('parameters' => $ourParamsArray));
 
-// $result = $client->GetItems(array('items'));
+// Create customer
+$ourParamsArray = array('customerNo' => '10', 'customerName' => 'Aadhar Joshi', 
+                        'customerAddress1' => 'G-302', 'customerAddress2' => ' Avalon Courtyard',
+                        'customerPostalNo' => '380050', 'customerCity' => 'Ahmedabad', 
+                        'customerCounty' => 'xyz', 'customerCountry' => 'India', 
+                        'customerPhoneNo' => '1234567890', 'result' => 'asdasd');
+$response = $client->__soapCall('CreateCustomer', array('parameters' => $ourParamsArray));
+echo '<pre>';
 print_r($response);
 
+// Get all customers
+$ourParamsArray = array('customerNo' => '10', 'customerName' => 'Aadhar Joshi', 
+                        'customerAddress1' => 'G-302', 'customerAddress2' => ' Avalon Courtyard',
+                        'customerPostalNo' => '380050', 'customerCity' => 'Ahmedabad', 
+                        'customerCounty' => 'xyz', 'customerCountry' => 'India', 
+                        'customerPhoneNo' => '1234567890', 'result' => 'asdasd');
+$response = $client->__soapCall('CreateCustomer', array('parameters' => $ourParamsArray));
+exit();
 
 //$client = new NTLMSoapClient($baseURL . '7000NewNordicHome');
 
